@@ -1,4 +1,4 @@
-namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer
+namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Models
 {
     public class UpdateCustomerRequest
     {

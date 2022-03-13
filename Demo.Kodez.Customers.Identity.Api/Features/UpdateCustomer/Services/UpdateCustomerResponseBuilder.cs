@@ -1,4 +1,11 @@
-﻿namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Services
+﻿using System.Net;
+using Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Models;
+using Demo.Kodez.Customers.Identity.Api.Shared;
+using Demo.Kodez.Customers.Identity.Api.Shared.Constants;
+using Demo.Kodez.Customers.Identity.Api.Shared.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Services
 {
     public class UpdateCustomerResponseBuilder : IResponseBuilder<UpdateCustomerRequest, Result>
     {
