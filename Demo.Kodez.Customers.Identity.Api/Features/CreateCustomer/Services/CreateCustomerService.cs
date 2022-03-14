@@ -41,10 +41,21 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
+            
+            SetPropertiesToAdd();
 
             var operation = await _commandHandler.ExecuteAsync(command);
 
             return operation;
+        }
+        
+        private void SetPropertiesToAdd()
+        {
+            _commandHandler
+                .Add(x => x.CustomerId)
+                .Add(x => x.FirstName)
+                .Add(x => x.LastName)
+                .Add(x=>x.Email);
         }
     }
 }

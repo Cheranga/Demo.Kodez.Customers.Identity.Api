@@ -34,25 +34,33 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Services
                 return Result.Failure(ErrorCodes.InvalidRequest, validationResult);
             }
 
-            var command = await GetCommand(request);
-            var operation = await _commandHandler.ExecuteAsync(command);
-            
-            return operation;
-        }
-
-        private async Task<UpdateCustomerCommand> GetCommand(UpdateCustomerRequest request)
-        {
-            var canUpdateEmail = await _featureManager.IsEnabledAsync("UpdateEmail");
-
             var command = new UpdateCustomerCommand
             {
                 CustomerId = request.CustomerId,
-                Email = canUpdateEmail? request.Email : null,
+                Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
+            
+            await SetPropertiesToUpdateAsync();
+            var operation = await _commandHandler.ExecuteAsync(command);
 
-            return command;
+            return operation;
+        }
+
+        private async Task SetPropertiesToUpdateAsync()
+        {
+            var canUpdateEmail = await _featureManager.IsEnabledAsync("UpdateEmail");
+
+            _commandHandler
+                .Add(x => x.CustomerId)
+                .Add(x => x.FirstName)
+                .Add(x => x.LastName);
+
+            if (canUpdateEmail)
+            {
+                _commandHandler.Add(x => x.Email);
+            }
         }
     }
 }

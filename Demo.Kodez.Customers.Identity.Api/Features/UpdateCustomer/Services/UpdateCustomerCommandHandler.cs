@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Azure.Data.Tables;
 using Demo.Kodez.Customers.Identity.Api.Infrastructure.DataAccess;
@@ -6,19 +6,19 @@ using Demo.Kodez.Customers.Identity.Api.Shared;
 using Demo.Kodez.Customers.Identity.Api.Shared.Constants;
 using Microsoft.Extensions.Logging;
 
-namespace Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Services
+namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Services
 {
-    public class CreateCustomerCommandHandler : CommandHandlerBase<CreateCustomerCommand>
+    public class UpdateCustomerCommandHandler : CommandHandlerBase<UpdateCustomerCommand>
     {
-        public CreateCustomerCommandHandler(TableServiceClient serviceClient, ILogger<CreateCustomerCommandHandler> logger) : base(serviceClient, logger)
+        public UpdateCustomerCommandHandler(TableServiceClient serviceClient, ILogger<UpdateCustomerCommandHandler> logger) : base(serviceClient, logger)
         {
         }
 
         protected override string TableName => "customers";
-        protected override string ErrorCode => ErrorCodes.InsertError;
-        protected override string ErrorMessage => ErrorMessages.InsertError;
+        protected override string ErrorCode => ErrorCodes.UpdateError;
+        protected override string ErrorMessage => ErrorMessages.UpdateError;
 
-        protected override TableEntity GetTableEntity(CreateCustomerCommand command)
+        protected override TableEntity GetTableEntity(UpdateCustomerCommand command)
         {
             var entity = new TableEntity("ACTIVE", command.CustomerId);
             return entity;
@@ -28,10 +28,10 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Services
         {
             try
             {
-                var response = await client.AddEntityAsync(entity);
+                var response = await client.UpsertEntityAsync(entity);
                 if (response.IsError)
                 {
-                    Logger.LogError("cannot create customer: {FailedReason}", response.ReasonPhrase);
+                    Logger.LogError("cannot update customer: {FailedReason}", response.ReasonPhrase);
                     return Result.Failure(ErrorCode, ErrorMessage);
                 }
 
