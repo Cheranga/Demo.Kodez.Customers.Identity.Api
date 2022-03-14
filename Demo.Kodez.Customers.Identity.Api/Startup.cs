@@ -31,7 +31,9 @@ namespace Demo.Kodez.Customers.Identity.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddFeatureManagement();
+            services
+                .AddAzureAppConfiguration()
+                .AddFeatureManagement();
 
             RegisterServices(services);
             RegisterValidators(services);
@@ -54,6 +56,7 @@ namespace Demo.Kodez.Customers.Identity.Api
             services.AddScoped<IUpdateCustomerService, UpdateCustomerService>();
 
             services.AddScoped<ICommandHandler<CreateCustomerCommand>, CreateCustomerCommandHandler>();
+            services.AddScoped<ICommandHandler<UpdateCustomerCommand>, UpdateCustomerCommandHandler>();
         }
 
         private void RegisterAzureClients(IServiceCollection services, IConfiguration configuration)
@@ -63,11 +66,9 @@ namespace Demo.Kodez.Customers.Identity.Api
                 var config = new TableConfig();
                 configuration.GetSection(nameof(TableConfig)).Bind(config);
 
-                builder.AddTableServiceClient(new Uri(config.TableServiceUri)).WithCredential(new DefaultAzureCredential());
+                builder.AddTableServiceClient(new Uri(config.Connection)).WithCredential(new DefaultAzureCredential());
             });
         }
-        
-        
 
         private void RegisterValidators(IServiceCollection services)
         {
@@ -84,6 +85,8 @@ namespace Demo.Kodez.Customers.Identity.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo.Kodez.Customers.Identity.Api v1"));
             }
 
+            app.UseAzureAppConfiguration();
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();

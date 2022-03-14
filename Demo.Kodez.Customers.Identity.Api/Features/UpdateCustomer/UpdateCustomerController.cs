@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer
 {
-    [Route("/api/customers")]
     public class UpdateCustomerController : ControllerBase
     {
         private readonly IResponseBuilder<UpdateCustomerRequest, Result> _responseBuilder;
@@ -19,9 +18,12 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer
             _responseBuilder = responseBuilder;
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateCustomerRequest request)
+        [HttpPut("api/customers/{customerId}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute]string customerId, [FromBody] UpdateCustomerRequest request)
         {
+            request ??= new UpdateCustomerRequest();
+            request.CustomerId = customerId;
+            
             var operation = await _updateCustomerService.UpdateAsync(request);
             var response = _responseBuilder.GetResponse(request, operation);
 

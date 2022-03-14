@@ -2,6 +2,6 @@
 {
     public class TableConfig
     {
-        public string TableServiceUri { get; set; }
+        public string Connection { get; set; }
     }
 }

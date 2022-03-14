@@ -1,14 +1,10 @@
-using Newtonsoft.Json;
-
-namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Models
+namespace Demo.Kodez.Customers.Identity.Api.Infrastructure.DataAccess
 {
-    public class UpdateCustomerRequest
+    public class UpdateCustomerCommand : ICommand
     {
-        [JsonIgnore]
         public string CustomerId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
         public string Email { get; set; }
     }
 }
