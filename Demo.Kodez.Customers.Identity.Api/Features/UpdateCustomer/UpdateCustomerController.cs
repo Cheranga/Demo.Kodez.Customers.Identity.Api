@@ -10,15 +10,15 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer
     [Route("/api/customers")]
     public class UpdateCustomerController : ControllerBase
     {
-        private readonly IUpdateCustomerService _updateCustomerService;
         private readonly IResponseBuilder<UpdateCustomerRequest, Result> _responseBuilder;
+        private readonly IUpdateCustomerService _updateCustomerService;
 
         public UpdateCustomerController(IUpdateCustomerService updateCustomerService, IResponseBuilder<UpdateCustomerRequest, Result> responseBuilder)
         {
             _updateCustomerService = updateCustomerService;
             _responseBuilder = responseBuilder;
         }
-        
+
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateCustomerRequest request)
         {

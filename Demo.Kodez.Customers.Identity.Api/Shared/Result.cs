@@ -7,14 +7,14 @@ namespace Demo.Kodez.Customers.Identity.Api.Shared
         public string ErrorCode { get; set; }
         public ValidationResult ValidationResult { get; set; }
         public bool Status => string.IsNullOrEmpty(ErrorCode);
-        
+
         public static Result Failure(string errorCode, string errorMessage)
         {
             var failure = new ValidationFailure(errorCode, errorMessage)
             {
                 ErrorCode = errorCode
             };
-            return Failure(errorCode, new ValidationResult(new[]{failure}));
+            return Failure(errorCode, new ValidationResult(new[] {failure}));
         }
 
         public static Result Failure(string errorCode, ValidationResult validationResult)
@@ -25,13 +25,13 @@ namespace Demo.Kodez.Customers.Identity.Api.Shared
                 ValidationResult = validationResult
             };
         }
-        
+
         public static Result Success()
         {
             return new Result();
         }
     }
-    
+
     public class Result<TData>
     {
         public string ErrorCode { get; set; }
@@ -46,7 +46,7 @@ namespace Demo.Kodez.Customers.Identity.Api.Shared
             {
                 ErrorCode = errorCode
             };
-            return Failure(errorCode, new ValidationResult(new[]{failure}));
+            return Failure(errorCode, new ValidationResult(new[] {failure}));
         }
 
         public static Result<TData> Failure(string errorCode, ValidationResult validationResult)

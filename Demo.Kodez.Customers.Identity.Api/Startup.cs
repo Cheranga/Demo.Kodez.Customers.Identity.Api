@@ -1,23 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Azure.Identity;
 using Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Models;
 using Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Services;
-using Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer;
 using Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Models;
 using Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Services;
+using Demo.Kodez.Customers.Identity.Api.Infrastructure.DataAccess;
 using Demo.Kodez.Customers.Identity.Api.Shared;
 using Demo.Kodez.Customers.Identity.Api.Shared.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
 
@@ -36,11 +32,12 @@ namespace Demo.Kodez.Customers.Identity.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddFeatureManagement();
-            
+
             RegisterServices(services);
             RegisterValidators(services);
+            RegisterAzureClients(services, Configuration);
             RegisterResponseBuilders(services);
-            
+
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Demo.Kodez.Customers.Identity.Api", Version = "v1"}); });
         }
@@ -55,8 +52,23 @@ namespace Demo.Kodez.Customers.Identity.Api
         {
             services.AddScoped<ICreateCustomerService, CreateCustomerService>();
             services.AddScoped<IUpdateCustomerService, UpdateCustomerService>();
+
+            services.AddScoped<ICommandHandler<CreateCustomerCommand>, CreateCustomerCommandHandler>();
+        }
+
+        private void RegisterAzureClients(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAzureClients(builder =>
+            {
+                var config = new TableConfig();
+                configuration.GetSection(nameof(TableConfig)).Bind(config);
+
+                builder.AddTableServiceClient(new Uri(config.TableServiceUri)).WithCredential(new DefaultAzureCredential());
+            });
         }
         
+        
+
         private void RegisterValidators(IServiceCollection services)
         {
             services.AddValidatorsFromAssembly(typeof(ModelValidatorBase<>).Assembly);

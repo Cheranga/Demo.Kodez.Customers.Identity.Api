@@ -9,7 +9,7 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Validators
         public CreateCustomerRequestValidator()
         {
             RuleFor(x => x.FirstName).NotNull().NotEmpty();
-            RuleFor(x=>x.LastName).NotNull().NotEmpty();
+            RuleFor(x => x.LastName).NotNull().NotEmpty();
             RuleFor(x => x.Email).NotNull().NotEmpty().EmailAddress();
         }
     }

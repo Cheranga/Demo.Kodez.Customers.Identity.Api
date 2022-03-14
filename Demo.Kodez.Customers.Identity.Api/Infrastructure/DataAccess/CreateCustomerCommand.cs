@@ -1,6 +1,6 @@
-﻿namespace Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Models
+﻿namespace Demo.Kodez.Customers.Identity.Api.Infrastructure.DataAccess
 {
-    public class CreateCustomerRequest
+    public class CreateCustomerCommand : ICommand
     {
         public string CustomerId { get; set; }
         public string FirstName { get; set; }

@@ -22,19 +22,15 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Services
             _featureManager = featureManager;
             _validator = validator;
         }
-        
+
         public async Task<Result> UpdateAsync(UpdateCustomerRequest request)
         {
             var validationResult = await _validator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-            {
-                return Result.Failure(ErrorCodes.InvalidRequest, validationResult);
-            }
-            
+            if (!validationResult.IsValid) return Result.Failure(ErrorCodes.InvalidRequest, validationResult);
+
             var canUpdateEmail = await _featureManager.IsEnabledAsync(Shared.Constants.Features.UpdateEmail);
 
             return Result.Success();
-
         }
     }
 }

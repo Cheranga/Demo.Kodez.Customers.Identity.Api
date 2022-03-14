@@ -13,10 +13,7 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Validators
             RuleFor(x => x.LastName).NotNull().NotEmpty();
 
             var isEmailEnabled = featureManager.IsEnabledAsync(Shared.Constants.Features.UpdateEmail).Result;
-            if (isEmailEnabled)
-            {
-                RuleFor(x => x.Email).NotNull().NotEmpty().EmailAddress();
-            }
+            if (isEmailEnabled) RuleFor(x => x.Email).NotNull().NotEmpty().EmailAddress();
         }
     }
 }
