@@ -57,6 +57,8 @@ namespace Demo.Kodez.Customers.Identity.Api
 
             services.AddScoped<ICommandHandler<CreateCustomerCommand>, CreateCustomerCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateCustomerCommand>, UpdateCustomerCommandHandler>();
+
+            services.AddScoped<IQueryHandler<GetCustomerQuery, CustomerDataModel>, GetCustomerQueryHandler>();
         }
 
         private void RegisterAzureClients(IServiceCollection services, IConfiguration configuration)

@@ -20,7 +20,7 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Services
 
         protected override TableEntity GetTableEntity(CreateCustomerCommand command)
         {
-            var entity = new TableEntity("ACTIVE", command.CustomerId);
+            var entity = new TableEntity("ACTIVE", command.CustomerId.ToUpper());
             return entity;
         }
 

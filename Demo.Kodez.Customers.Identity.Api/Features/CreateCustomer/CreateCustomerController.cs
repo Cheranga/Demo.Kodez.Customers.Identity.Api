@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer
 {
-    [Route("/api/customers")]
     public class CreateCustomerController : ControllerBase
     {
         private readonly ICreateCustomerService _createCustomerService;
@@ -19,7 +18,7 @@ namespace Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer
             _responseBuilder = responseBuilder;
         }
 
-        [HttpPost]
+        [HttpPost("api/customers")]
         public async Task<IActionResult> CreateAsync([FromBody] CreateCustomerRequest request)
         {
             var operation = await _createCustomerService.CreateAsync(request);
