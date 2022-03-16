@@ -2,6 +2,7 @@ using System;
 using Azure.Identity;
 using Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Models;
 using Demo.Kodez.Customers.Identity.Api.Features.CreateCustomer.Services;
+using Demo.Kodez.Customers.Identity.Api.Features.NewCustomerPromotion;
 using Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Models;
 using Demo.Kodez.Customers.Identity.Api.Features.UpdateCustomer.Services;
 using Demo.Kodez.Customers.Identity.Api.Infrastructure.DataAccess;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.FeatureFilters;
 using Microsoft.OpenApi.Models;
 
 namespace Demo.Kodez.Customers.Identity.Api
@@ -33,7 +35,8 @@ namespace Demo.Kodez.Customers.Identity.Api
         {
             services
                 .AddAzureAppConfiguration()
-                .AddFeatureManagement();
+                .AddFeatureManagement()
+                .AddFeatureFilter<TimeWindowFilter>();
 
             RegisterServices(services);
             RegisterValidators(services);
@@ -54,9 +57,11 @@ namespace Demo.Kodez.Customers.Identity.Api
         {
             services.AddScoped<ICreateCustomerService, CreateCustomerService>();
             services.AddScoped<IUpdateCustomerService, UpdateCustomerService>();
+            services.AddScoped<INewCustomerPromotionService, NewCustomerPromotionService>();
 
             services.AddScoped<ICommandHandler<CreateCustomerCommand>, CreateCustomerCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateCustomerCommand>, UpdateCustomerCommandHandler>();
+            services.AddScoped<ICommandHandler<NewCustomerPromotionCommand>, NewCustomerPromotionCommandHandler>();
 
             services.AddScoped<IQueryHandler<GetCustomerQuery, CustomerDataModel>, GetCustomerQueryHandler>();
         }
