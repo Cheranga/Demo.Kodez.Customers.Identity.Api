@@ -31,9 +31,7 @@ namespace Demo.Kodez.Customers.Identity.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddAzureAppConfiguration()
-                .AddFeatureManagement();
+            services.AddFeatureManagement();
 
             RegisterServices(services);
             RegisterValidators(services);
@@ -68,7 +66,7 @@ namespace Demo.Kodez.Customers.Identity.Api
                 var config = new TableConfig();
                 configuration.GetSection(nameof(TableConfig)).Bind(config);
 
-                builder.AddTableServiceClient(new Uri(config.Connection)).WithCredential(new DefaultAzureCredential());
+                builder.AddTableServiceClient(config.Connection);
             });
         }
 
@@ -87,8 +85,6 @@ namespace Demo.Kodez.Customers.Identity.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo.Kodez.Customers.Identity.Api v1"));
             }
 
-            app.UseAzureAppConfiguration();
-            
             app.UseHttpsRedirection();
 
             app.UseRouting();
