@@ -43,8 +43,8 @@ stages:
   jobs:
     - deployment: DEV
       variables:    
-        - template: "Variables/common.yaml"      
-        - template: "Variables/dev.yaml"
+        - template: "Variables/common.yml"      
+        - template: "Variables/dev.yml"
       pool:
         vmImage: ${{variables.vmImage}}
       environment: DEV
