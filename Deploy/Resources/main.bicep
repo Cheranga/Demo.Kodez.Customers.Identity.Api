@@ -1,7 +1,9 @@
 param buildNumber string
+param environmentName string
 param location string = resourceGroup().location
-param sgName string
+param apiName string
 param tableNames string
+
 
 @allowed([
   'nonprod'
@@ -9,6 +11,10 @@ param tableNames string
 ])
 param envType string = 'nonprod'
 
+var appInsName = 'ins-${apiName}-${environmentName}'
+var sgName = replace('sg${apiName}${environmentName}','-','')
+
+// Storage Account
 module storageAccountModule 'StorageAccount/template.bicep' = {
   name: '${buildNumber}-storage-account'
   params: {
@@ -16,5 +22,14 @@ module storageAccountModule 'StorageAccount/template.bicep' = {
     tables: tableNames
     location: location
     storageType:envType
+  }
+}
+
+// Application Insights
+module applicationInsightsModule 'ApplicationInsights/template.bicep' = {
+  name: '${buildNumber}-application-insights'
+  params: {
+    name: appInsName
+    location: location
   }
 }

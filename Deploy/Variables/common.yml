@@ -2,23 +2,9 @@ variables:
   - name: rgName
     value: cc-rg-identity-api-$(environmentName)
   - name: rgLocation
-    value: Australia Southeast
-  - name: planName
-    value: plan-identity-api-$(environmentName)
-  - name: planSku
-    value: S1
-  - name: planCapacity
-    value: 1
-  - name: appInsightsName
-    value: ins-identity-api-$(environmentName)
-  - name: sgName
-    value: ccsgidentityapi$(environmentName)
-  - name: azConfigName
-    value: appcs-identityapi-$(environmentName)
-  - name: keyVaultName
-    value: kv-identityapi-$(environmentName)
+    value: Australia Southeast  
   - name: apiName
-    value: cc-identityapi-$(environmentName)  
+    value: identityapi  
   - name: commonRgName
     value: rg-demos-kodez-customers-bff
   - name: commonAzConfigName

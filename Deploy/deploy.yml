@@ -24,10 +24,11 @@ steps:
       scriptLocation: "inlineScript"
       inlineScript: |
         az deployment group create `
-        --name cccustidentityapi-$(Build.BuildNumber) `
+        --name $(Build.BuildNumber)-cccustidentityapi `
         --resource-group "$(rgName)" `
         --template-file "$(Pipeline.Workspace)/deploy/main.bicep" `
         --parameters "buildNumber=$(Build.BuildNumber)" `
+        "environmentName=$(environmentName)" `
         "location=$(rgLocation)" `
-        "sgName=$(sgName)" `
+        "apiName=$(apiName)" `        
         "tableNames=$(tableNames)"  
