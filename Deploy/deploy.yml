@@ -26,7 +26,7 @@ steps:
         az deployment group create `
         --name cccustidentityapi-$(Build.BuildNumber) `
         --resource-group "$(rgName)" `
-        --template-file "$(Pipeline.Workspace)/deploy/main.bicep" `
+        --template-file "$(Pipeline.Workspace)/Deploy/main.bicep" `
         --parameters "buildNumber=$(Build.BuildNumber)" `
         "location=$(rgLocation)" `
         "sgName=$(sgName)" `
