@@ -30,5 +30,5 @@ steps:
         --parameters "buildNumber=$(Build.BuildNumber)" `
         "environmentName=$(environmentName)" `
         "location=$(rgLocation)" `
-        "apiName=$(apiName)" `        
+        "apiName=$(apiName)" `
         "tableNames=$(tableNames)"  
