@@ -32,7 +32,7 @@ stages:
     pool:
       vmImage: ${{variables.vmImage}}
     steps:
-    - template: 'build.yaml'
+    - template: 'build.yml'
       parameters:        
         projectFiles: '**/*.csproj'
         buildPlatform: $(platform)
