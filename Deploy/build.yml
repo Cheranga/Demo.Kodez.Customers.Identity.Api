@@ -26,3 +26,7 @@ steps:
     inputs:
       pathtoPublish: "$(Build.ArtifactStagingDirectory)"
       artifactName: "WebApp"
+
+  - publish: $(Build.Repository.LocalPath)/Deploy/Resources
+    displayName: Create BICEP template artifacts
+    artifact: deploy      
