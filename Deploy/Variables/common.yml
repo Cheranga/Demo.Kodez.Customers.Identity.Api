@@ -23,3 +23,5 @@ variables:
     value: rg-demos-kodez-customers-bff
   - name: commonAzConfigName
     value: appcs-cc-kodez-customers-shared
+  - name: tableNames
+    value: customers,newcustomerpromotions
