@@ -29,6 +29,7 @@ steps:
         --template-file "$(Pipeline.Workspace)/deploy/main.bicep" `
         --parameters "buildNumber=$(Build.BuildNumber)" `
         "environmentName=$(environmentName)" `
+        "apiEnvironmentName=$(apiEnvironment)" `
         "location=$(rgLocation)" `
         "apiName=$(apiName)" `
-        "tableNames=$(tableNames)"  
+        "tableNames=$(tableNames)"

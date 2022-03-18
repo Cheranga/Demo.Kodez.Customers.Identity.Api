@@ -5,9 +5,7 @@ variables:
     value: Australia Southeast  
   - name: apiName
     value: identityapi  
-  - name: commonRgName
-    value: rg-demos-kodez-customers-bff
-  - name: commonAzConfigName
+  - name: sharedConfig
     value: appcs-cc-kodez-customers-shared
   - name: tableNames
     value: customers,newcustomerpromotions

@@ -26,3 +26,5 @@ resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2021-06-01-preview'=[
     value:'${item.value}'
   }  
 }]
+
+output keyVaultUri string = keyVault.properties.vaultUri
