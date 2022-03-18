@@ -33,3 +33,4 @@ resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2021-08-0
     name: t
   }]
 }
+
