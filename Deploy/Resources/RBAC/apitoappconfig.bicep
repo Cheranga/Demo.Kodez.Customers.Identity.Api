@@ -1,12 +1,6 @@
 param appConfigName string
 param rbacAccess object
 
-@allowed([
-  'resourcegroup'
-  'subscription'
-])
-param resourceScope string = 'resourcegroup'
-
 var dataReader = '516239f1-63e1-4d78-a4de-a74fb236a071'
 
 resource role 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
@@ -16,7 +10,6 @@ resource role 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' exist
 
 resource appConfig 'Microsoft.AppConfiguration/configurationStores@2021-10-01-preview' existing = {  
   name: appConfigName
-  scope: resourceScope == 'resourcegroup' ? resourceGroup() : subscription()
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = [for item in rbacAccess.items:{

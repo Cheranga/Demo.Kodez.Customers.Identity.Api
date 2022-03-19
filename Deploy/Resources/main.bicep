@@ -126,7 +126,6 @@ module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
   name: '${buildNumber}-rbac-api-to-identity-config'
   params: {
     appConfigName: identityConfigName
-    resourceScope: 'resourcegroup'
     rbacAccess: {
       items: [
         {
@@ -151,7 +150,6 @@ module rbacApiToSharedConfig 'RBAC/apitoappconfig.bicep' = {
   name: '${buildNumber}-rbac-api-to-shared-config'
   params: {
     appConfigName: sharedConfig
-    resourceScope: 'subscription'
     rbacAccess: {
       items: [
         {
