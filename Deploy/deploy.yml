@@ -54,5 +54,5 @@ steps:
         echo $apiProductionId
         echo $apiStagingId
 
-        # az role assignment create --role "App Configuration Data Reader" --assignee $apiProductionId --scope $commonAppConfigId
-        # az role assignment create --role "App Configuration Data Reader" --assignee $apiStagingId --scope $commonAppConfigId     
+        az role assignment create --role "App Configuration Data Reader" --assignee $apiProductionId --scope $commonAppConfigId
+        az role assignment create --role "App Configuration Data Reader" --assignee $apiStagingId --scope $commonAppConfigId     
