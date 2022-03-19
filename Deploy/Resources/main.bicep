@@ -123,15 +123,78 @@ module customerIdentityAPI 'API/template.bicep' = {
   }
 }
 
-// Give access to the Azure app configuration to access the key vault
-module rbacConfigToKeyVault 'RBAC/appconfigtokeyvault.bicep' = {
-  name: '${buildNumber}-rbac-appconfig-to-keyvault'
+// Give API read access to the Azure app configuration
+module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
+  name: '${buildNumber}-rbac-api-to-identity-config'
   params: {    
     appConfigName: azureAppConfigurationModule.name
     friendlyName: 'Read access to the key vault'
     productionSlot: customerIdentityApiName
     stagingSlot: '${customerIdentityApiName}-Staging'
   }
+  dependsOn:[
+    customerIdentityAPI
+    azureAppConfigurationModule
+  ]
+}
+
+// Give API read access to the Azure app configuration
+module rbacApiToSharedConfig 'RBAC/apitoappconfig.bicep' = {
+  name: '${buildNumber}-rbac-api-to-shared-config'
+  params: {    
+    appConfigName: sharedConfig
+    friendlyName: 'Read access to the key vault'
+    productionSlot: customerIdentityApiName
+    stagingSlot: '${customerIdentityApiName}-Staging'
+  }
+  dependsOn:[
+    customerIdentityAPI
+  ]
 }
 
 // Give access to the API to access both Azure app configurations
+resource apiToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
+  name: '${buildNumber}-api-access-to-keyvault'
+  properties: {
+    accessPolicies: [
+      {
+        tenantId:subscription().tenantId
+        objectId:customerIdentityAPI.outputs.ProductionObjectId
+        permissions:{
+          secrets:[
+            'get'
+            'list'
+          ]          
+        }        
+      }
+      {
+        tenantId:subscription().tenantId
+        objectId:customerIdentityAPI.outputs.StagingObjectId
+        permissions:{
+          secrets:[
+            'get'
+            'list'
+          ]          
+        }        
+      }
+    ]
+  }
+}
+
+resource appConfigToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
+  name: '${buildNumber}-appconfig-access-to-keyvault'
+  properties: {
+    accessPolicies: [
+      {
+        tenantId:subscription().tenantId
+        objectId:azureAppConfigurationModule.outputs.ObjectId
+        permissions:{
+          secrets:[
+            'get'
+            'list'
+          ]          
+        }        
+      }      
+    ]
+  }
+}

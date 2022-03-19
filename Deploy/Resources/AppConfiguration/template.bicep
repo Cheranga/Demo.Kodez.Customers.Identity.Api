@@ -49,3 +49,4 @@ resource appFeatures 'Microsoft.AppConfiguration/configurationStores/keyValues@2
 
 
 output AppConfigurationUrl string = azureAppConfiguration.properties.endpoint
+output ObjectId string = azureAppConfiguration.identity.principalId
