@@ -4,6 +4,7 @@ param apiEnvironmentName string
 param location string = resourceGroup().location
 param apiName string
 param tableNames string
+param sharedConfig string
 
 
 @allowed([
@@ -16,7 +17,7 @@ var appInsName = 'ins-${apiName}-${environmentName}'
 var sgName = replace('sg${apiName}${environmentName}', '-', '')
 var aspName = 'plan-${apiName}-${environmentName}'
 var kvName = 'kv-${apiName}-${environmentName}'
-// var customerIdentityApiName = 'api-${apiEnvironmentName}-${environmentName}'
+var customerIdentityApiName = 'api-${apiEnvironmentName}-${environmentName}'
 var identityConfigName = 'appcs-cc-${apiName}-${environmentName}'
 
 // Storage Account
@@ -74,7 +75,7 @@ module keyVaultModule 'KeyVault/template.bicep' = {
 }
 
 // Azure App Configuration
-module aziureAppConfigurationModule 'AppConfiguration/template.bicep' = {
+module azureAppConfigurationModule 'AppConfiguration/template.bicep' = {
   name: '${buildNumber}-azure-app-configuration'
   params: {
     location: location
@@ -83,12 +84,8 @@ module aziureAppConfigurationModule 'AppConfiguration/template.bicep' = {
     configurations: {
       items:[
         {
-          name:'setting1'
-          value: 'setting1 value'
-        }
-        {
-          name:'setting2'
-          value: 'setting2 value'
+          name:'somesetting'
+          value: 'some value'
         }
       ]
     }
@@ -111,3 +108,21 @@ module aziureAppConfigurationModule 'AppConfiguration/template.bicep' = {
     }
   }
 }
+
+// Customer Identity API
+
+module customerIdentityAPI 'API/template.bicep' = {
+  name: '${buildNumber}-${apiName}-${environmentName}'
+  params: {
+    location: location
+    apiEnvironment: apiEnvironmentName
+    apiName: customerIdentityApiName
+    identityApiConfigUrl: azureAppConfigurationModule.outputs.AppConfigurationUrl
+    planName: aspName
+    sharedConfigUrl: 'https://${sharedConfig}.azconfig.io'
+  }
+}
+
+// Give access to the Azure app configuration to access the key vault
+
+// Give access to the API to access both Azure app configurations

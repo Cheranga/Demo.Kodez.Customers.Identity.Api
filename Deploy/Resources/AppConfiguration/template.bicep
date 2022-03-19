@@ -5,7 +5,7 @@ param configurations object
 param featureFlags object
 param keyVaultReferences object
 
-resource azconfig_resource 'Microsoft.AppConfiguration/configurationStores@2021-03-01-preview' = {
+resource azureAppConfiguration 'Microsoft.AppConfiguration/configurationStores@2021-03-01-preview' = {
   name: azConfigName
   location: location
   sku: {
@@ -22,13 +22,13 @@ resource appconfigurations 'Microsoft.AppConfiguration/configurationStores/keyVa
   properties: {
     value: item.value
   }
-  parent: azconfig_resource
+  parent: azureAppConfiguration
 }]
 
 // Key vault references
 resource keyVaultConfigurations 'Microsoft.AppConfiguration/configurationStores/keyValues@2020-07-01-preview' = [for item in keyVaultReferences.items: {
   name: '${item.name}$${apiEnvironment}'
-  parent: azconfig_resource
+  parent: azureAppConfiguration
   properties: {
     value: string({
       uri: item.value
@@ -44,5 +44,8 @@ resource appFeatures 'Microsoft.AppConfiguration/configurationStores/keyValues@2
     value: string(item)
     contentType: 'application/vnd.microsoft.appconfig.ff+json;charset=utf-8'
   }
-  parent: azconfig_resource
+  parent: azureAppConfiguration
 }]
+
+
+output AppConfigurationUrl string = azureAppConfiguration.properties.endpoint
