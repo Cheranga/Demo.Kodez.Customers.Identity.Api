@@ -1,23 +1,22 @@
 param appConfigName string
 param friendlyName string
-param productionSlot string
-param stagingSlot string
+param apiName string
 
 @allowed([
   'resourcegroup'
   'subscription'
 ])
-param scope string = 'resourcegroup'
+param resourceScope string = 'resourcegroup'
 
 var dataReader = '516239f1-63e1-4d78-a4de-a74fb236a071'
 
-resource production 'Microsoft.Web/sites@2021-03-01' existing = {
-  name: productionSlot
+resource productionSlot 'Microsoft.Web/sites@2021-03-01' existing = {
+  name: apiName
   scope: resourceGroup()
 }
 
-resource staging 'Microsoft.Web/sites@2021-03-01' existing = {
-  name: stagingSlot
+resource stagingSlot 'Microsoft.Web/sites/slots@2021-03-01' existing = {
+  name: '${apiName}/Staging'
   scope: resourceGroup()
 }
 
@@ -28,7 +27,7 @@ resource role 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' exist
 
 resource appConfig 'Microsoft.AppConfiguration/configurationStores@2021-10-01-preview' existing = {  
   name: appConfigName
-  scope: scope == 'resourcegroup' ? resourceGroup() : subscription()
+  scope: resourceScope == 'resourcegroup' ? resourceGroup() : subscription()
 }
 
 resource roleAssignmentProd 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
@@ -36,7 +35,7 @@ resource roleAssignmentProd 'Microsoft.Authorization/roleAssignments@2020-04-01-
   scope: appConfig
   properties: {
     roleDefinitionId: role.id
-    principalId: production.identity.principalId
+    principalId: productionSlot.identity.principalId
     principalType: 'ServicePrincipal'
   }
 }
@@ -46,7 +45,7 @@ resource roleAssignmentStaging 'Microsoft.Authorization/roleAssignments@2020-04-
   scope: appConfig
   properties: {
     roleDefinitionId: role.id
-    principalId: staging.identity.principalId
+    principalId: stagingSlot.identity.principalId
     principalType: 'ServicePrincipal'
   }
 }

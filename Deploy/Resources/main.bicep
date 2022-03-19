@@ -121,15 +121,14 @@ module customerIdentityAPI 'API/template.bicep' = {
   }
 }
 
-// Give API read access to the Azure app configuration
+// Give API read access to the identity Azure app configuration
 module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
   name: '${buildNumber}-rbac-api-to-identity-config'
   params: {
     appConfigName: identityConfigName
     friendlyName: 'Read access to the key vault'
-    productionSlot: customerIdentityApiName
-    stagingSlot: '${customerIdentityApiName}/Staging'
-    scope: 'resourcegroup'
+    apiName: customerIdentityApiName
+    resourceScope: 'resourcegroup'
   }
   dependsOn: [
     customerIdentityAPI
@@ -137,15 +136,14 @@ module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
   ]
 }
 
-// Give API read access to the Azure app configuration
+// Give API read access to the shared Azure app configuration
 module rbacApiToSharedConfig 'RBAC/apitoappconfig.bicep' = {
   name: '${buildNumber}-rbac-api-to-shared-config'
   params: {
     appConfigName: sharedConfig
     friendlyName: 'Read access to the key vault'
-    productionSlot: customerIdentityApiName
-    stagingSlot: '${customerIdentityApiName}/Staging'
-    scope: 'subscription'
+    apiName: customerIdentityApiName
+    resourceScope: 'subscription'
   }
   dependsOn: [
     customerIdentityAPI
