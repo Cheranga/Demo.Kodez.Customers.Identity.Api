@@ -145,29 +145,6 @@ module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
   ]
 }
 
-// Give API read access to the shared Azure app configuration
-module rbacApiToSharedConfig 'RBAC/apitoappconfig.bicep' = {
-  name: '${buildNumber}-rbac-api-to-shared-config'
-  params: {
-    appConfigName: sharedConfig
-    rbacAccess: {
-      items: [
-        {
-          objectId: customerIdentityAPI.outputs.ProductionObjectId
-          friendlyName: 'prod slot to azure app config'
-        }
-        {
-          objectId: customerIdentityAPI.outputs.StagingObjectId
-          friendlyName: 'staging slot to azure app config'
-        }
-      ]
-    }
-  }
-  dependsOn: [
-    customerIdentityAPI
-  ]
-}
-
 // Give access to the keyvault
 resource apiToKeyVaultAccess 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
   name: '${kvName}/add'

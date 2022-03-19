@@ -34,3 +34,19 @@ steps:
         "apiName=$(apiName)" `
         "tableNames=$(tableNames)" `
         "sharedConfig=$(sharedConfig)"
+
+  - task: AzureCLI@2
+    displayName: "Set access to read Azure configurations"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      scriptType: "pscore"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        $commonAppConfigId = "/subscriptions/${{subscriptionId}}/resourcegroups/${{sharedRgName}}/providers/Microsoft.AppConfiguration/configurationStores/${{sharedConfig}}"        
+        $apiDeployment = "${{parameters.buildNumber}}-api-${{apiName}}-${{environmentName}}"
+
+        $apiProductionId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.ProductionObjectId.value)
+        $apiStagingId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.StagingObjectId.value)
+
+        az role assignment create --role "App Configuration Data Reader" --assignee $apiProductionId --scope $commonAppConfigId
+        az role assignment create --role "App Configuration Data Reader" --assignee $apiStagingId --scope $commonAppConfigId     

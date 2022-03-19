@@ -1,4 +1,5 @@
 variables:
+  - group: SharedGroup
   - name: rgName
     value: cc-rg-identity-api-$(environmentName)
   - name: rgLocation
@@ -9,3 +10,6 @@ variables:
     value: appcs-cc-kodez-customers-shared
   - name: tableNames
     value: customers,newcustomerpromotions
+  - name: sharedRgName
+    value: rg-demos-kodez-customers-bff   
+       

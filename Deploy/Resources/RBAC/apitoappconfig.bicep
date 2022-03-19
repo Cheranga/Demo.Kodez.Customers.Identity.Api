@@ -8,11 +8,12 @@ resource role 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' exist
   scope: subscription()
 }
 
-resource appConfig 'Microsoft.AppConfiguration/configurationStores@2021-10-01-preview' existing = {  
+resource appConfig 'Microsoft.AppConfiguration/configurationStores@2021-10-01-preview' existing = {
   name: appConfigName
+  scope: resourceGroup()
 }
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = [for item in rbacAccess.items:{
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = [for item in rbacAccess.items: {
   name: guid(resourceGroup().id, uniqueString('${item.objectId}-${item.friendlyName}'), role.id)
   scope: appConfig
   properties: {
