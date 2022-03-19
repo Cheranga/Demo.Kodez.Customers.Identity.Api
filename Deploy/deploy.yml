@@ -43,7 +43,7 @@ steps:
       scriptLocation: "inlineScript"
       inlineScript: |
         $commonAppConfigId = "/subscriptions/$(subscriptionId)/resourcegroups/$(sharedRgName)/providers/Microsoft.AppConfiguration/configurationStores/$(sharedConfig)"
-        $apiDeployment = "${{parameters.buildNumber}}-api-$(apiName)-$(environmentName)"
+        $apiDeployment = "${{parameters.buildNumber}}-$(apiName)-$(environmentName)"
 
         $apiProductionId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.ProductionObjectId.value)
         $apiStagingId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.StagingObjectId.value)
