@@ -48,5 +48,10 @@ steps:
         $apiProductionId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.ProductionObjectId.value)
         $apiStagingId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.StagingObjectId.value)
 
-        az role assignment create --role "App Configuration Data Reader" --assignee $apiProductionId --scope $commonAppConfigId
-        az role assignment create --role "App Configuration Data Reader" --assignee $apiStagingId --scope $commonAppConfigId     
+        echo $commonAppConfigId
+        echo $apiDeployment
+        echo $apiProductionId
+        echo $apiStagingId
+        
+        # az role assignment create --role "App Configuration Data Reader" --assignee $apiProductionId --scope $commonAppConfigId
+        # az role assignment create --role "App Configuration Data Reader" --assignee $apiStagingId --scope $commonAppConfigId     
