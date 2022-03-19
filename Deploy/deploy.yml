@@ -45,8 +45,8 @@ steps:
         $commonAppConfigId = "/subscriptions/$(subscriptionId)/resourcegroups/$(sharedRgName)/providers/Microsoft.AppConfiguration/configurationStores/$(sharedConfig)"
         $apiDeployment = "${{parameters.buildNumber}}-$(apiName)-$(environmentName)"
 
-        $apiProductionId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.ProductionObjectId.value)
-        $apiStagingId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.StagingObjectId.value)
+        $apiProductionId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.productionObjectId.value)
+        $apiStagingId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.stagingObjectId.value)
         
         az role assignment create --role "App Configuration Data Reader" --assignee $apiProductionId --scope $commonAppConfigId
-        # az role assignment create --role "App Configuration Data Reader" --assignee $apiStagingId --scope $commonAppConfigId     
+        az role assignment create --role "App Configuration Data Reader" --assignee $apiStagingId --scope $commonAppConfigId     
