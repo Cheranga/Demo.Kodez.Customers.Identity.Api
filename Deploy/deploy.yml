@@ -42,7 +42,7 @@ steps:
       scriptType: "pscore"
       scriptLocation: "inlineScript"
       inlineScript: |
-        $commonAppConfigId = "/subscriptions/${{subscriptionId}}/resourcegroups/${{sharedRgName}}/providers/Microsoft.AppConfiguration/configurationStores/${{sharedConfig}}"        
+        $commonAppConfigId = "//subscriptions//${{subscriptionId}}//resourcegroups//${{sharedRgName}}//providers//Microsoft.AppConfiguration//configurationStores//${{sharedConfig}}"        
         $apiDeployment = "${{parameters.buildNumber}}-api-${{apiName}}-${{environmentName}}"
 
         $apiProductionId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.ProductionObjectId.value)
