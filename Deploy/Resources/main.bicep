@@ -128,7 +128,7 @@ module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
     appConfigName: identityConfigName
     friendlyName: 'Read access to the key vault'
     productionSlot: customerIdentityApiName
-    stagingSlot: '${customerIdentityApiName}-Staging'
+    stagingSlot: '${customerIdentityApiName}/Staging'
     scope: 'resourcegroup'
   }
   dependsOn: [
@@ -144,7 +144,7 @@ module rbacApiToSharedConfig 'RBAC/apitoappconfig.bicep' = {
     appConfigName: sharedConfig
     friendlyName: 'Read access to the key vault'
     productionSlot: customerIdentityApiName
-    stagingSlot: '${customerIdentityApiName}-Staging'
+    stagingSlot: '${customerIdentityApiName}/Staging'
     scope: 'subscription'
   }
   dependsOn: [
