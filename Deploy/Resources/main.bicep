@@ -126,9 +126,19 @@ module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
   name: '${buildNumber}-rbac-api-to-identity-config'
   params: {
     appConfigName: identityConfigName
-    friendlyName: 'Read access to the key vault'
-    apiName: customerIdentityApiName
     resourceScope: 'resourcegroup'
+    rbacAccess: {
+      items: [
+        {
+          objectId: customerIdentityAPI.outputs.ProductionObjectId
+          friendlyName: 'prod slot to azure app config'
+        }
+        {
+          objectId: customerIdentityAPI.outputs.StagingObjectId
+          friendlyName: 'staging slot to azure app config'
+        }
+      ]
+    }
   }
   dependsOn: [
     customerIdentityAPI
@@ -141,9 +151,19 @@ module rbacApiToSharedConfig 'RBAC/apitoappconfig.bicep' = {
   name: '${buildNumber}-rbac-api-to-shared-config'
   params: {
     appConfigName: sharedConfig
-    friendlyName: 'Read access to the key vault'
-    apiName: customerIdentityApiName
     resourceScope: 'subscription'
+    rbacAccess: {
+      items: [
+        {
+          objectId: customerIdentityAPI.outputs.ProductionObjectId
+          friendlyName: 'prod slot to azure app config'
+        }
+        {
+          objectId: customerIdentityAPI.outputs.StagingObjectId
+          friendlyName: 'staging slot to azure app config'
+        }
+      ]
+    }
   }
   dependsOn: [
     customerIdentityAPI
