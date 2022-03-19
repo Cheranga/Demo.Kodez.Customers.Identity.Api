@@ -26,7 +26,7 @@ resource appConfig 'Microsoft.AppConfiguration/configurationStores@2021-10-01-pr
 }
 
 resource roleAssignmentProd 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(resourceGroup().id, friendlyName, role.id)  
+  name: guid(resourceGroup().id, '${productionSlot}-${friendlyName}', role.id)  
   scope:appConfig
   properties: {
     roleDefinitionId: role.id
@@ -36,7 +36,7 @@ resource roleAssignmentProd 'Microsoft.Authorization/roleAssignments@2020-04-01-
 }
 
 resource roleAssignmentStaging 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(resourceGroup().id, friendlyName, role.id)  
+  name: guid(resourceGroup().id, '${stagingSlot}-${friendlyName}', role.id)  
   scope:appConfig
   properties: {
     roleDefinitionId: role.id
