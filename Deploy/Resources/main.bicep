@@ -17,7 +17,7 @@ var appInsName = 'ins-${apiName}-${environmentName}'
 var sgName = replace('sg${apiName}${environmentName}', '-', '')
 var aspName = 'plan-${apiName}-${environmentName}'
 var kvName = 'kv-${apiName}-${environmentName}'
-var customerIdentityApiName = 'api-${apiEnvironmentName}-${environmentName}'
+var customerIdentityApiName = 'api-${apiName}-${environmentName}'
 var identityConfigName = 'appcs-cc-${apiName}-${environmentName}'
 
 // Storage Account
@@ -124,5 +124,14 @@ module customerIdentityAPI 'API/template.bicep' = {
 }
 
 // Give access to the Azure app configuration to access the key vault
+module rbacConfigToKeyVault 'RBAC/appconfigtokeyvault.bicep' = {
+  name: '${buildNumber}-rbac-appconfig-to-keyvault'
+  params: {    
+    appConfigName: azureAppConfigurationModule.name
+    friendlyName: 'Read access to the key vault'
+    productionSlot: customerIdentityApiName
+    stagingSlot: '${customerIdentityApiName}-Staging'
+  }
+}
 
 // Give access to the API to access both Azure app configurations

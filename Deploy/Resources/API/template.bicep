@@ -97,7 +97,3 @@ resource apiName_Staging_appsettings 'Microsoft.Web/sites/slots/config@2019-08-0
     WEBSITE_TIME_ZONE: websiteTimeZone
   }
 }
-
-output productionApiPrincipalId string = apiName_resource.identity.principalId
-output stagingApiPrincipalId string = apiName_Staging.identity.principalId
-output tenantId string = apiName_resource.identity.tenantId
