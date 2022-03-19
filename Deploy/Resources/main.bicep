@@ -153,8 +153,8 @@ module rbacApiToSharedConfig 'RBAC/apitoappconfig.bicep' = {
 }
 
 // Give access to the API to access both Azure app configurations
-resource apiToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
-  name: '${buildNumber}-api-access-to-keyvault'
+resource productionSlotToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
+  name: '${buildNumber}-productionslot-access-to-keyvault'
   properties: {
     accessPolicies: [
       {
@@ -167,6 +167,14 @@ resource apiToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-prev
           ]          
         }        
       }
+    ]
+  }
+}
+
+resource stagingSlotToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
+  name: '${buildNumber}-stagingslot-access-to-keyvault'
+  properties: {
+    accessPolicies: [
       {
         tenantId:subscription().tenantId
         objectId:customerIdentityAPI.outputs.StagingObjectId
