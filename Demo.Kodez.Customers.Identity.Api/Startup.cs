@@ -73,7 +73,7 @@ namespace Demo.Kodez.Customers.Identity.Api
                 var config = new TableConfig();
                 configuration.GetSection(nameof(TableConfig)).Bind(config);
 
-                builder.AddTableServiceClient(new Uri(config.Connection)).WithCredential(new DefaultAzureCredential());
+                builder.AddTableServiceClient(config.Connection);
             });
         }
 

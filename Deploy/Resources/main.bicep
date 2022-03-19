@@ -91,8 +91,8 @@ module azureAppConfigurationModule 'AppConfiguration/template.bicep' = {
     featureFlags: {
       items: [
         {
-          id: 'UpdateEmail'
-          description: 'updating the email'
+          id: 'NewUserPromotion'
+          description: 'new user promotion'
           enabled: true
         }
       ]
