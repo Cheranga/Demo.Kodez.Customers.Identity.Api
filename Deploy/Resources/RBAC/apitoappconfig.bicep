@@ -3,6 +3,12 @@ param friendlyName string
 param productionSlot string
 param stagingSlot string
 
+@allowed([
+  'resourcegroup'
+  'subscription'
+])
+param scope string = 'resourcegroup'
+
 var dataReader = '516239f1-63e1-4d78-a4de-a74fb236a071'
 
 resource production 'Microsoft.Web/sites@2021-03-01' existing = {
@@ -16,13 +22,13 @@ resource staging 'Microsoft.Web/sites@2021-03-01' existing = {
 }
 
 resource role 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
-  scope: subscription()
   name: dataReader
+  scope: subscription()
 }
 
-resource appConfig 'Microsoft.AppConfiguration/configurationStores@2021-10-01-preview' existing = {
-  scope: resourceGroup()
+resource appConfig 'Microsoft.AppConfiguration/configurationStores@2021-10-01-preview' existing = {  
   name: appConfigName
+  scope: scope == 'resourcegroup' ? resourceGroup() : subscription()
 }
 
 resource roleAssignmentProd 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
