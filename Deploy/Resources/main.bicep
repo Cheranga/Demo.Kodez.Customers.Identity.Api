@@ -6,7 +6,6 @@ param apiName string
 param tableNames string
 param sharedConfig string
 
-
 @allowed([
   'nonprod'
   'prod'
@@ -82,15 +81,15 @@ module azureAppConfigurationModule 'AppConfiguration/template.bicep' = {
     apiEnvironment: apiEnvironmentName
     azConfigName: identityConfigName
     configurations: {
-      items:[
+      items: [
         {
-          name:'somesetting'
+          name: 'somesetting'
           value: 'some value'
         }
       ]
     }
     featureFlags: {
-      items:[
+      items: [
         {
           id: 'UpdateEmail'
           description: 'updating the email'
@@ -99,7 +98,7 @@ module azureAppConfigurationModule 'AppConfiguration/template.bicep' = {
       ]
     }
     keyVaultReferences: {
-      items:[
+      items: [
         {
           name: 'TableConfig:Connection'
           value: '${keyVaultModule.outputs.keyVaultUri}/secrets/TableStorageConnectionString'
@@ -126,13 +125,13 @@ module customerIdentityAPI 'API/template.bicep' = {
 // Give API read access to the Azure app configuration
 module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
   name: '${buildNumber}-rbac-api-to-identity-config'
-  params: {    
+  params: {
     appConfigName: azureAppConfigurationModule.name
     friendlyName: 'Read access to the key vault'
     productionSlot: customerIdentityApiName
     stagingSlot: '${customerIdentityApiName}-Staging'
   }
-  dependsOn:[
+  dependsOn: [
     customerIdentityAPI
     azureAppConfigurationModule
   ]
@@ -141,68 +140,52 @@ module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
 // Give API read access to the Azure app configuration
 module rbacApiToSharedConfig 'RBAC/apitoappconfig.bicep' = {
   name: '${buildNumber}-rbac-api-to-shared-config'
-  params: {    
+  params: {
     appConfigName: sharedConfig
     friendlyName: 'Read access to the key vault'
     productionSlot: customerIdentityApiName
     stagingSlot: '${customerIdentityApiName}-Staging'
   }
-  dependsOn:[
+  dependsOn: [
     customerIdentityAPI
   ]
 }
 
-// Give access to the API to access both Azure app configurations
-resource productionSlotToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
-  name: '${buildNumber}-productionslot-access-to-keyvault'
+// Give access to the keyvault
+resource apiToKeyVaultAccess 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
+  name: '${kvName}/add'
   properties: {
     accessPolicies: [
       {
-        tenantId:subscription().tenantId
-        objectId:customerIdentityAPI.outputs.ProductionObjectId
-        permissions:{
-          secrets:[
+        tenantId: subscription().tenantId
+        objectId: customerIdentityAPI.outputs.ProductionObjectId
+        permissions: {
+          secrets: [
             'get'
             'list'
-          ]          
-        }        
+          ]
+        }
       }
-    ]
-  }
-}
-
-resource stagingSlotToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
-  name: '${buildNumber}-stagingslot-access-to-keyvault'
-  properties: {
-    accessPolicies: [
       {
-        tenantId:subscription().tenantId
-        objectId:customerIdentityAPI.outputs.StagingObjectId
-        permissions:{
-          secrets:[
+        tenantId: subscription().tenantId
+        objectId: customerIdentityAPI.outputs.StagingObjectId
+        permissions: {
+          secrets: [
             'get'
             'list'
-          ]          
-        }        
+          ]
+        }
       }
-    ]
-  }
-}
-
-resource appConfigToKeyVault 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
-  name: '${buildNumber}-appconfig-access-to-keyvault'
-  properties: {
-    accessPolicies: [
       {
-        tenantId:subscription().tenantId
-        objectId:azureAppConfigurationModule.outputs.ObjectId
-        permissions:{
-          secrets:[
+        tenantId: subscription().tenantId
+        objectId: azureAppConfigurationModule.outputs.ObjectId
+        permissions: {
+          secrets: [
             'get'
             'list'
-          ]          
-        }        
-      }      
+          ]
+        }
+      }
     ]
   }
 }
