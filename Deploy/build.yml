@@ -1,10 +1,27 @@
 steps:
+  - task: NuGetToolInstaller@1
+    displayName: 'NuGet tool installer'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Build $(platformConfiguration)'
+  - task: Cache@2
+    displayName: 'Cache Nuget Packages'
     inputs:
-      command: "build"
-      projects: '**/*.csproj'
+      key: 'nuget | "$(Agent.OS)" | **/packages.lock.json'
+      path: '$(NUGET_PACKAGES)'
+      cacheHitVar: 'CACHE_RESTORED'
+
+  - task: NuGetCommand@2
+    displayName: 'Restore Nuget Packages'
+    condition: ne(variables.CACHE_RESTORED, true)
+    inputs:
+      command: 'restore'
+      restoreSolution: '$(solution)'    
+
+  - task: VSBuild@1
+    displayName: Build Solution
+    inputs:
+      solution: '$(solution)'
+      platform: '$(platform)'
+      configuration: '$(platformConfiguration)'
 
   - task: DotNetCoreCLI@2
     displayName: Test
