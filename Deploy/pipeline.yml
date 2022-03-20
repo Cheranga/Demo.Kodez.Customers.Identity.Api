@@ -23,7 +23,9 @@ variables:
 - name: platform
   value: 'any cpu'  
 - name: platformConfiguration
-  value: 'release'  
+  value: 'release'
+- name: NUGET_PACKAGES
+  value: ''    
 
 stages:
 - stage: Build
