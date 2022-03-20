@@ -1,0 +1,92 @@
+parameters:
+  - name: buildNumber
+    type: string
+
+steps:
+  - task: AzureCLI@2
+    displayName: "Create resource group"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      scriptType: "pscore"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        $ifExists = az group exists -n "$(rgName)"
+        if ($ifExists -eq 'false') {
+          echo 'creating the resource group'
+          az group create -n "$(rgName)" -l "$(rgLocation)"
+        }
+
+  - task: AzureCLI@2
+    displayName: "Provision resources"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      scriptType: "pscore"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        az deployment group create `
+        --name $(Build.BuildNumber)-cccustidentityapi `
+        --resource-group "$(rgName)" `
+        --template-file "$(Pipeline.Workspace)/deploy/main.bicep" `
+        --parameters "buildNumber=$(Build.BuildNumber)" `
+        "environmentName=$(environmentName)" `
+        "apiEnvironmentName=$(apiEnvironment)" `
+        "location=$(rgLocation)" `
+        "apiName=$(apiName)" `
+        "tableNames=$(tableNames)" `
+        "sharedConfig=$(sharedConfig)"
+
+  - task: AzureCLI@2
+    displayName: "Set access to read Azure configurations"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      scriptType: "pscore"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        $commonAppConfigId = "/subscriptions/$(subscriptionId)/resourcegroups/$(sharedRgName)/providers/Microsoft.AppConfiguration/configurationStores/$(sharedConfig)"
+        $apiDeployment = "${{parameters.buildNumber}}-$(apiName)-$(environmentName)"
+
+        $apiProductionId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.productionObjectId.value)
+        $apiStagingId=$(az deployment group show -g "$(rgName)" -n "$apiDeployment" --query properties.outputs.stagingObjectId.value)
+        
+        az role assignment create --role "App Configuration Data Reader" --assignee $apiProductionId --scope $commonAppConfigId
+        az role assignment create --role "App Configuration Data Reader" --assignee $apiStagingId --scope $commonAppConfigId    
+
+  - task: AzureRmWebAppDeployment@3
+    displayName: "Deploy to Staging"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      WebAppName: "api-$(apiName)-$(environmentName)"
+      DeployToSlotFlag: true
+      ResourceGroupName: "$(rgName)"
+      SlotName: staging
+      Package: "$(Pipeline.Workspace)/WebApp/Demo.Kodez.Customers.Identity.Api.zip"
+      ScriptType: "Inline Script"
+      enableXmlVariableSubstitution: true
+
+  - task: AzureAppServiceManage@0
+    displayName: "Start Staging Slot"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      action: "Start Azure App Service"
+      webAppName: "api-$(apiName)-$(environmentName)"
+      specifySlotOrASE: true
+      resourceGroupName: "$(rgName)"
+      slot: staging
+
+  - task: AzureAppServiceManage@0
+    displayName: "Swap to Production"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      webAppName: "api-$(apiName)-$(environmentName)"
+      resourceGroupName: "$(rgName)"
+      sourceSlot: staging
+
+  - task: AzureAppServiceManage@0
+    displayName: "Stop Staging Slot"
+    inputs:
+      azureSubscription: "$(azureSubscription)"
+      action: "Stop Azure App Service"
+      webAppName: "api-$(apiName)-$(environmentName)"
+      specifySlotOrASE: true
+      resourceGroupName: "$(rgName)"
+      slot: staging         

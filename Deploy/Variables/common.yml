@@ -1,0 +1,15 @@
+variables:
+  - group: SharedGroup
+  - name: rgName
+    value: cc-rg-identity-api-$(environmentName)
+  - name: rgLocation
+    value: Australia Southeast  
+  - name: apiName
+    value: identityapi  
+  - name: sharedConfig
+    value: appcs-cc-kodez-customers-shared
+  - name: tableNames
+    value: customers,newcustomerpromotions
+  - name: sharedRgName
+    value: rg-demos-kodez-customers-bff   
+       

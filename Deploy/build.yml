@@ -1,0 +1,32 @@
+steps:
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build $(platformConfiguration)'
+    inputs:
+      command: "build"
+      projects: '**/*.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: 'test'
+      projects: '**/*Tests.csproj'
+      arguments: '--configuration Release'
+
+  - task: DotNetCoreCLI@2
+    displayName: "Publish web API"
+    inputs:
+      command: "publish"
+      publishWebProjects: true
+      arguments: "--configuration $(platformConfiguration) --output $(Build.ArtifactStagingDirectory)"
+      zipAfterPublish: True
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Create artifact for web API"
+    inputs:
+      pathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      artifactName: "WebApp"
+
+  - publish: $(Build.Repository.LocalPath)/Deploy/Resources
+    displayName: Create BICEP template artifacts
+    artifact: deploy      
