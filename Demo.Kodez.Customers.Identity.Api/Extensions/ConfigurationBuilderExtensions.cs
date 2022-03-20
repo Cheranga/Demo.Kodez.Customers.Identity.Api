@@ -2,6 +2,7 @@
 using Azure.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Hosting;
 
 namespace Demo.Kodez.Customers.Identity.Api.Extensions
@@ -26,6 +27,8 @@ namespace Demo.Kodez.Customers.Identity.Api.Extensions
                 {
                     var identityAzureAppConfigurationUri = configuration["IdentityAzureAppConfigurationUrl"];
                     options
+                        .Select(KeyFilter.Any)
+                        .Select(KeyFilter.Any, context.HostingEnvironment.EnvironmentName)
                         .Connect(new Uri(identityAzureAppConfigurationUri), credentials)
                         .ConfigureKeyVault(vaultOptions => { vaultOptions.SetCredential(credentials); })
                         .ConfigureRefresh(refreshOptions => { refreshOptions.Register("RefreshAll", true).SetCacheExpiration(TimeSpan.FromSeconds(5)); })

@@ -70,10 +70,8 @@ namespace Demo.Kodez.Customers.Identity.Api
         {
             services.AddAzureClients(builder =>
             {
-                var config = new TableConfig();
-                configuration.GetSection(nameof(TableConfig)).Bind(config);
-
-                builder.AddTableServiceClient(config.Connection);
+                var tableConfig = configuration.GetSection(nameof(TableConfig)).Get<TableConfig>();
+                builder.AddTableServiceClient(tableConfig.Connection);
             });
         }
 
