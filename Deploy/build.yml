@@ -3,20 +3,21 @@ steps:
     displayName: 'NuGet tool installer'
 
   - task: Cache@2
-    displayName: 'NuGet Cache'
+    displayName: 'Cache Nuget Packages'
     inputs:
       key: 'nuget | "$(Agent.OS)" | **/packages.lock.json'
       path: '$(NUGET_PACKAGES)'
       cacheHitVar: 'CACHE_RESTORED'
 
   - task: NuGetCommand@2
-    displayName: 'NuGet restore'
+    displayName: 'Restore Nuget Packages'
     condition: ne(variables.CACHE_RESTORED, true)
     inputs:
       command: 'restore'
       restoreSolution: '$(solution)'    
 
   - task: VSBuild@1
+    displayName: Build Solution
     inputs:
       solution: '$(solution)'
       platform: '$(platform)'
