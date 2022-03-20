@@ -101,7 +101,7 @@ module azureAppConfigurationModule 'AppConfiguration/template.bicep' = {
       items: [
         {
           name: 'TableConfig:Connection'
-          value: '${keyVaultModule.outputs.keyVaultUri}/secrets/TableStorageConnectionString'
+          value: '${keyVaultModule.outputs.keyVaultUri}secrets/TableStorageConnectionString'
         }
       ]
     }
