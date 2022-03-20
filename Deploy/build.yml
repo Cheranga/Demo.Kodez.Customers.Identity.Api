@@ -16,11 +16,11 @@ steps:
       command: 'restore'
       restoreSolution: '$(solution)'    
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Build $(platformConfiguration)'
+  - task: VSBuild@1
     inputs:
-      command: "build"
-      projects: '**/*.csproj'
+      solution: '$(solution)'
+      platform: '$(platform)'
+      configuration: '$(platformConfiguration)'
 
   - task: DotNetCoreCLI@2
     displayName: Test

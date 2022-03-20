@@ -25,7 +25,9 @@ variables:
 - name: platformConfiguration
   value: 'release'
 - name: NUGET_PACKAGES
-  value: ''    
+  value: ''
+- name: solution
+  value: '**/*.sln'
 
 stages:
 - stage: Build
