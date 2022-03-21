@@ -35,7 +35,8 @@ stages:
   jobs:
   - job: 'Build'
     pool:
-      vmImage: ${{variables.vmImage}}
+      name: 'Default'
+      # vmImage: ${{variables.vmImage}}
     steps:
     - template: 'build.yml'
       parameters:        
@@ -51,7 +52,8 @@ stages:
         - template: "Variables/common.yml"      
         - template: "Variables/dev.yml"
       pool:
-        vmImage: ${{variables.vmImage}}
+        name: 'Default'
+        # vmImage: ${{variables.vmImage}}
       environment: DEV
       strategy:
         runOnce:
