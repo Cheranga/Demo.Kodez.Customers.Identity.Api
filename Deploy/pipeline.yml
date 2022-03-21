@@ -16,6 +16,8 @@ pr:
   branches:
     include:
     - main
+pool:
+  name: Default    
 
 variables:
 - name: vmImage
