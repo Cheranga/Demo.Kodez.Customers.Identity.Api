@@ -127,6 +127,9 @@ module customerIdentityAPI 'API/template.bicep' = {
     planName: aspName
     sharedConfigUrl: 'https://${sharedConfig}.azconfig.io'
   }
+  dependsOn:[
+    azureAppConfigurationModule
+  ]
 }
 
 // Give API read access to the identity Azure app configuration
@@ -161,4 +164,7 @@ module accessToKeyVault 'KeyVault/accesspolicies.bicep' = {
     productionId: customerIdentityAPI.outputs.ProductionObjectId
     stagingId: customerIdentityAPI.outputs.StagingObjectId
   }
+  dependsOn:[
+    keyVaultModule
+  ]
 }
