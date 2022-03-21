@@ -70,6 +70,7 @@ module keyVaultModule 'KeyVault/template.bicep' = {
   }
   dependsOn: [
     storageAccountModule
+    applicationInsightsModule
   ]
 }
 
@@ -110,6 +111,9 @@ module azureAppConfigurationModule 'AppConfiguration/template.bicep' = {
       ]
     }
   }
+  dependsOn:[
+    keyVaultModule
+  ]
 }
 
 // Customer Identity API
