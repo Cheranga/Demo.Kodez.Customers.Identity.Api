@@ -145,41 +145,12 @@ module rbacApiToCustApiConfig 'RBAC/apitoappconfig.bicep' = {
   ]
 }
 
-// Give access to the keyvault
-resource apiToKeyVaultAccess 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-preview' = {
-  name: '${kvName}/add'
-  properties: {
-    accessPolicies: [
-      {
-        tenantId: subscription().tenantId
-        objectId: customerIdentityAPI.outputs.ProductionObjectId
-        permissions: {
-          secrets: [
-            'get'
-            'list'
-          ]
-        }
-      }
-      {
-        tenantId: subscription().tenantId
-        objectId: customerIdentityAPI.outputs.StagingObjectId
-        permissions: {
-          secrets: [
-            'get'
-            'list'
-          ]
-        }
-      }
-      {
-        tenantId: subscription().tenantId
-        objectId: azureAppConfigurationModule.outputs.ObjectId
-        permissions: {
-          secrets: [
-            'get'
-            'list'
-          ]
-        }
-      }
-    ]
+module accessToKeyVault 'KeyVault/accesspolicies.bicep' = {
+  name: '${buildNumber}-access-to-keyvault'
+  params: {
+    azureAppConfigurationId: azureAppConfigurationModule.outputs.ObjectId
+    kvName: kvName
+    productionId: customerIdentityAPI.outputs.ProductionObjectId
+    stagingId: customerIdentityAPI.outputs.StagingObjectId
   }
 }

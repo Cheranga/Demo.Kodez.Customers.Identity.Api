@@ -48,7 +48,7 @@ stages:
   dependsOn: ["Build"]
   jobs:
     - deployment: DEV
-      variables:    
+      variables: 
         - template: "Variables/common.yml"      
         - template: "Variables/dev.yml"
       pool:
