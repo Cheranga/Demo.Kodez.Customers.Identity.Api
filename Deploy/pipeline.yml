@@ -16,12 +16,11 @@ pr:
   branches:
     include:
     - main
-pool:
-  name: Default    
+  
 
 variables:
 - name: vmImage
-  value: 'windows-latest'
+  value: 'Default'
 - name: platform
   value: 'any cpu'  
 - name: platformConfiguration
